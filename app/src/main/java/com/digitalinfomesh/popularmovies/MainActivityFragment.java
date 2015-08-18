@@ -1,6 +1,7 @@
 package com.digitalinfomesh.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -260,13 +261,21 @@ public class MainActivityFragment extends Fragment {
                 imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new GridView.LayoutParams(500, 750));
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
-                //imageView.setBackgroundColor(Color.rgb(0, 0, 0));
-                //imageView.setPadding(5, 5, 5, 5);
             } else {
                 imageView = (ImageView) convertView;
             }
 
             Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
+
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                    startActivity(detailIntent);
+
+                }
+            });
             return imageView;
         }
 
