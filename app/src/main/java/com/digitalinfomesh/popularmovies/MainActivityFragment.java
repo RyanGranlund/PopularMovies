@@ -254,7 +254,7 @@ public class MainActivityFragment extends Fragment {
 
         // create a new ImageView for each item referenced by the Adapter
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ImageView imageView;
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
@@ -272,6 +272,7 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                    detailIntent.putExtra("moviePosition",position);
                     startActivity(detailIntent);
 
                 }
