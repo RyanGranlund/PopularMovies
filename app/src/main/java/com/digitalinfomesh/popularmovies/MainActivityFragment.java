@@ -71,9 +71,6 @@ public class MainActivityFragment extends Fragment {
 
     private void updateMovies() {
         FetchMoviesTask moviesTask = new FetchMoviesTask();
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //String location = prefs.getString(getString(R.string.pref_location_key),
-        //        getString(R.string.pref_location_default));
         moviesTask.execute();
     }
 
@@ -94,6 +91,8 @@ public class MainActivityFragment extends Fragment {
 
             //http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=1e6681f9617a4e50af4a8d0588a4429d
 
+           // SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+           // String searchType = getResources().getString(R.string.pref_search_key);
             try {
                 final String MOVIES_BASE_URL = "http://api.themoviedb.org/3";
                 final String TYPE_PATH = "discover";
@@ -171,6 +170,7 @@ public class MainActivityFragment extends Fragment {
 
         private String[] getMoviesDataFromJson(String moviesJsonStr)
                 throws JSONException {
+
 
             // These are the names of the JSON objects that need to be extracted.
             final String RESULT_LIST = "results";
