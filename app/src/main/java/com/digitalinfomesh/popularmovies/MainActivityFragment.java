@@ -33,11 +33,11 @@ import java.net.URL;
 public class MainActivityFragment extends Fragment {
 
 
-    private String[] posterPaths = new String[20];
-    private String[] titles = new String[20];
-    private String[] plots = new String[20];
-    private String[] ratings = new String[20];
-    private String[] releases = new String[20];
+    public static String[] posterPaths = new String[20];
+    public static String[] titles = new String[20];
+    public static String[] plots = new String[20];
+    public static String[] ratings = new String[20];
+    public static String[] releases = new String[20];
 
     public MainActivityFragment() {
     }
