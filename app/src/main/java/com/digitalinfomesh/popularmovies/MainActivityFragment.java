@@ -2,9 +2,11 @@ package com.digitalinfomesh.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +46,6 @@ public class MainActivityFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        updateMovies();
 
 
 
@@ -66,7 +67,16 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        updateMovies();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateMovies();
+
+        // The activity has become visible (it is now "resumed").
     }
 
     private void updateMovies() {
@@ -91,19 +101,37 @@ public class MainActivityFragment extends Fragment {
 
             //http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=1e6681f9617a4e50af4a8d0588a4429d
 
-           // SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-           // String searchType = getResources().getString(R.string.pref_search_key);
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String searchType = prefs.getString("search","popular");
+
+
+
             try {
                 final String MOVIES_BASE_URL = "http://api.themoviedb.org/3";
                 final String TYPE_PATH = "discover";
                 final String VIDEO_TYPE = "movie";
-                final String SORT_BY = "popularity.desc";
+                //String SORT_BY = "popularity.desc";
+                String SORT_BY;
+                final String COUNTRY = "US";
+                //final String SORT_BY2 = "rating.desc";
                 final String API_Key = "1e6681f9617a4e50af4a8d0588a4429d";
+
+
+
+                if (searchType.toString().equals("rating")) {
+                    SORT_BY = "vote_average.desc";
+
+                } else {
+                    SORT_BY ="popularity.desc";
+
+                }
 
 
                 Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                         .appendPath(TYPE_PATH)
                         .appendPath(VIDEO_TYPE)
+                        .appendQueryParameter("certification_country",COUNTRY)
                         .appendQueryParameter("sort_by", SORT_BY)
                         .appendQueryParameter("api_key", API_Key)
                         .build();
@@ -260,12 +288,14 @@ public class MainActivityFragment extends Fragment {
                 // if it's not recycled, initialize some attributes
                 imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new GridView.LayoutParams(500, 750));
-                imageView.setScaleType(ImageView.ScaleType.CENTER);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } else {
                 imageView = (ImageView) convertView;
             }
 
-            Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
+
+                Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
+
 
 
             imageView.setOnClickListener(new View.OnClickListener() {
