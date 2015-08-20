@@ -35,6 +35,7 @@ import java.net.URL;
 public class MainActivityFragment extends Fragment {
 
 
+    //Variables that store movie data
     public static String[] posterPaths = new String[20];
     public static String[] titles = new String[20];
     public static String[] plots = new String[20];
@@ -57,8 +58,6 @@ public class MainActivityFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-
-
         return rootView;
 
     }
@@ -68,15 +67,12 @@ public class MainActivityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateMovies();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         updateMovies();
-
-        // The activity has become visible (it is now "resumed").
     }
 
     private void updateMovies() {
@@ -84,6 +80,7 @@ public class MainActivityFragment extends Fragment {
         moviesTask.execute();
     }
 
+    //Get movie data using AsyncTask
     public class FetchMoviesTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
@@ -91,34 +88,28 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected String[] doInBackground(String... params) {
 
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
-            // Will contain the raw JSON response as a string.
             String moviesJsonStr = null;
 
-            //http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=1e6681f9617a4e50af4a8d0588a4429d
-
-
+            //Gets movie search type from shared preferences
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String searchType = prefs.getString("search","popular");
 
 
 
             try {
+                //variables used to build URL
+                String SORT_BY;
                 final String MOVIES_BASE_URL = "http://api.themoviedb.org/3";
                 final String TYPE_PATH = "discover";
                 final String VIDEO_TYPE = "movie";
-                //String SORT_BY = "popularity.desc";
-                String SORT_BY;
                 final String COUNTRY = "US";
-                //final String SORT_BY2 = "rating.desc";
                 final String API_Key = "1e6681f9617a4e50af4a8d0588a4429d";
 
 
-
+                //Set sort by variable depending on shared preferences
                 if (searchType.toString().equals("rating")) {
                     SORT_BY = "vote_average.desc";
 
@@ -128,6 +119,7 @@ public class MainActivityFragment extends Fragment {
                 }
 
 
+                //build URL
                 Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                         .appendPath(TYPE_PATH)
                         .appendPath(VIDEO_TYPE)
@@ -138,17 +130,14 @@ public class MainActivityFragment extends Fragment {
 
                 URL url = new URL(builtUri.toString());
 
-                // Create the request to themoviedb, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
 
                 if (inputStream == null) {
-                    // Nothing to do.
                     return null;
                 }
 
@@ -160,7 +149,6 @@ public class MainActivityFragment extends Fragment {
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
                     return null;
                 }
 
@@ -168,8 +156,6 @@ public class MainActivityFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the movie data, there's no point in attemping
-                // to parse it.
                 return null;
 
             } finally {
@@ -186,13 +172,13 @@ public class MainActivityFragment extends Fragment {
             }
 
             try {
+                //parse movie data from json
                 return getMoviesDataFromJson(moviesJsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
 
-            // This will only happen if there was an error getting or parsing the forecast.
             return null;
         }
 
@@ -200,7 +186,6 @@ public class MainActivityFragment extends Fragment {
                 throws JSONException {
 
 
-            // These are the names of the JSON objects that need to be extracted.
             final String RESULT_LIST = "results";
             final String MOVIE_POSTER = "poster_path";
             final String MOVIE_TITLE = "original_title";
@@ -220,24 +205,19 @@ public class MainActivityFragment extends Fragment {
             String rating;
             String release;
 
+            //loop through json and set movie data
             for (int i = 0; i < resultArray.length(); i++) {
 
 
-                // Get the JSON object representing the poster path
-                JSONObject pathObject = resultArray.getJSONObject(i);
-                JSONObject titleObject = resultArray.getJSONObject(i);
-                JSONObject plotObject = resultArray.getJSONObject(i);
-                JSONObject ratingObject = resultArray.getJSONObject(i);
-                JSONObject releaseObject = resultArray.getJSONObject(i);
+                JSONObject jsonObject = resultArray.getJSONObject(i);
 
-                // path is in a child array called "poster_path", which is 1 element long.
-                //JSONObject posterObject = pathObject.getJSONArray(MOVIE_POSTER).getJSONObject(0);
-                path = pathObject.getString(MOVIE_POSTER);
-                title = pathObject.getString(MOVIE_TITLE);
-                plot = pathObject.getString(MOVIE_PLOT);
-                rating = pathObject.getString(MOVIE_RATING);
-                release = pathObject.getString(MOVIE_RELEASE);
+                path = jsonObject.getString(MOVIE_POSTER);
+                title = jsonObject.getString(MOVIE_TITLE);
+                plot = jsonObject.getString(MOVIE_PLOT);
+                rating = jsonObject.getString(MOVIE_RATING);
+                release = jsonObject.getString(MOVIE_RELEASE);
 
+                //set public static variables with movie data
                 posterPaths[i] = path;
                 titles[i] = title;
                 plots[i] = plot;
@@ -252,6 +232,7 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result){
+            //Set gridview adapter
             GridView gridview = (GridView) getActivity().findViewById(R.id.gridView);
             gridview.setAdapter(new ImageAdapter(getActivity()));
 
@@ -280,7 +261,7 @@ public class MainActivityFragment extends Fragment {
         }
 
 
-        // create a new ImageView for each item referenced by the Adapter
+        //Create imageviews for grid positions
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ImageView imageView;
@@ -294,10 +275,11 @@ public class MainActivityFragment extends Fragment {
             }
 
 
+                //set image to imageview
                 Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
 
 
-
+            //when clicking open details view
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -18,19 +18,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
@@ -40,26 +35,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // The activity has become visible (it is now "resumed").
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Another activity is taking focus (this activity is about to be "paused").
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // The activity is no longer visible (it is now "stopped")
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // The activity is about to be destroyed.
     }
 
 }
