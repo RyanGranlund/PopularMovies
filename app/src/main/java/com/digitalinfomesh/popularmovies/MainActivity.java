@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            //start settings activity when settings menu clicked
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
