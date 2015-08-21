@@ -43,7 +43,12 @@ public class DetailActivityFragment extends Fragment {
 
         //Set Plot TextView
         TextView plot = (TextView) detailView.findViewById(R.id.plot);
-        plot.setText(MainActivityFragment.plots[pos]);
+        if (MainActivityFragment.plots[pos].equals("null")){
+            plot.setText("Plot unavailable");
+        }else{
+            plot.setText(MainActivityFragment.plots[pos]);
+        }
+
         plot.setMovementMethod(new ScrollingMovementMethod());
 
         //Set Rating TextView
