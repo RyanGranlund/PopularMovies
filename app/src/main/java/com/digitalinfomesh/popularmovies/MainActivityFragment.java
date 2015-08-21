@@ -49,6 +49,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            updateMovies();
+        }
 
     }
 
@@ -62,11 +65,16 @@ public class MainActivityFragment extends Fragment {
     public void onPause() {
         super.onPause();
     }
+
     @Override
     public void onResume(){
         super.onResume();
-        updateMovies();
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        //String searchType = prefs.getString("search","popular");
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +91,7 @@ public class MainActivityFragment extends Fragment {
     }
 
 
-    private void updateMovies() {
+    public void updateMovies() {
         FetchMoviesTask moviesTask = new FetchMoviesTask();
         moviesTask.execute();
     }
@@ -302,8 +310,6 @@ public class MainActivityFragment extends Fragment {
     }
 
 }
-
-
 
 
 

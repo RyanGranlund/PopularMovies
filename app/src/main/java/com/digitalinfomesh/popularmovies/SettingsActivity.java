@@ -38,10 +38,12 @@ public class SettingsActivity extends PreferenceActivity
             int prefIndex = listPreference.findIndexOfValue(stringValue);
             if (prefIndex >= 0) {
                 preference.setSummary(listPreference.getEntries()[prefIndex]);
+
             }
         } else {
             preference.setSummary(stringValue);
         }
+
 
         return true;
     }
