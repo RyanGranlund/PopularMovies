@@ -43,36 +43,45 @@ public class MainActivityFragment extends Fragment {
     public static String[] releases = new String[20];
 
     public MainActivityFragment() {
+
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateMovies();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         return inflater.inflate(R.layout.fragment_main, container, false);
 
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
-        updateMovies();
+
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateMovies();
-    }
 
     private void updateMovies() {
         FetchMoviesTask moviesTask = new FetchMoviesTask();
@@ -273,8 +282,7 @@ public class MainActivityFragment extends Fragment {
                 imageView = (ImageView) convertView;
             }
 
-
-                //set image to imageview
+                //set image to image view
                 Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
 
 
@@ -292,6 +300,7 @@ public class MainActivityFragment extends Fragment {
         }
 
     }
+
 }
 
 
