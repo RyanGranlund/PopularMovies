@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -77,6 +76,7 @@ public class MainActivityFragment extends Fragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String searchType = prefs.getString("search","popular");
 
+        //if current movie search type does not match shared pref search type update movies
         if (currentSortState.equals(searchType)) {
 
         }else{
@@ -301,16 +301,13 @@ public class MainActivityFragment extends Fragment {
                 imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new GridView.LayoutParams(500, 750));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setId(position +1 );
+                //imageView.setId(position +1 );
             } else {
                 imageView = (ImageView) convertView;
             }
 
                 //set image to image view
                 Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
-            //Set title TextView
-            TextView test = (TextView) getActivity().findViewById(R.id.textView);
-            test.setText("Ryan Test");
 
 
 
