@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +42,8 @@ public class MainActivityFragment extends Fragment {
     public static String[] plots = new String[20];
     public static String[] ratings = new String[20];
     public static String[] releases = new String[20];
+    public static String currentSortState = new String();
+
 
     public MainActivityFragment() {
 
@@ -69,8 +72,17 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //String searchType = prefs.getString("search","popular");
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String searchType = prefs.getString("search","popular");
+
+        if (currentSortState.equals(searchType)) {
+
+        }else{
+            updateMovies();
+        }
+
 
     }
 
@@ -112,6 +124,7 @@ public class MainActivityFragment extends Fragment {
             //Gets movie search type from shared preferences
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String searchType = prefs.getString("search","popular");
+            currentSortState = searchType;
 
 
 
@@ -133,6 +146,8 @@ public class MainActivityFragment extends Fragment {
                     SORT_BY ="popularity.desc";
 
                 }
+
+
 
 
                 //build URL
@@ -286,12 +301,17 @@ public class MainActivityFragment extends Fragment {
                 imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new GridView.LayoutParams(500, 750));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setId(position +1 );
             } else {
                 imageView = (ImageView) convertView;
             }
 
                 //set image to image view
                 Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
+            //Set title TextView
+            TextView test = (TextView) getActivity().findViewById(R.id.textView);
+            test.setText("Ryan Test");
+
 
 
             //when clicking open details view

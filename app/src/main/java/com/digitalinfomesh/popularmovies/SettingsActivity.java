@@ -17,6 +17,7 @@ public class SettingsActivity extends PreferenceActivity
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_search_key)));
 
+
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {
@@ -26,6 +27,7 @@ public class SettingsActivity extends PreferenceActivity
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
+
     }
 
 
