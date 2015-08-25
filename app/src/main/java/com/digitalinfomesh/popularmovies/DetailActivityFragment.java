@@ -29,35 +29,35 @@ public class DetailActivityFragment extends Fragment {
 
         View detailView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        //get position data passed in intent
+        //get movie data from parcelable
         Intent detailIntent = getActivity().getIntent();
-        int pos = detailIntent.getIntExtra("moviePosition", 0);
+        Movie movie = detailIntent.getParcelableExtra("movieDetails");
 
         //Set title TextView
         TextView title = (TextView) detailView.findViewById(R.id.title);
-        title.setText(MainActivityFragment.titles[pos]);
+        title.setText(movie.getTitle());
 
         //Set poster image using Picasso ImageView
         ImageView poster = (ImageView) detailView.findViewById(R.id.poster);
-        Picasso.with(getActivity()).load("http://image.tmdb.org/t/p/w500/" + MainActivityFragment.posterPaths[pos]).into(poster);
+        Picasso.with(getActivity()).load("http://image.tmdb.org/t/p/w500/" + movie.getPosterPath()).into(poster);
 
         //Set Plot TextView
         TextView plot = (TextView) detailView.findViewById(R.id.plot);
-        if (MainActivityFragment.plots[pos].equals("null")){
+        if (movie.getPlot().equals("null")){
             plot.setText("Plot unavailable");
         }else{
-            plot.setText(MainActivityFragment.plots[pos]);
+            plot.setText(movie.getPlot());
         }
 
         plot.setMovementMethod(new ScrollingMovementMethod());
 
         //Set Rating TextView
         TextView rating = (TextView) detailView.findViewById(R.id.rating);
-        rating.setText("Rating: " + MainActivityFragment.ratings[pos]);
+        rating.setText("Rating: " + movie.getRating());
 
         //Set Release Date TextView
         TextView release = (TextView) detailView.findViewById(R.id.release);
-        release.setText("Released: " + MainActivityFragment.releases[pos]);
+        release.setText("Released: " + movie.getRelease());
 
 
         return detailView;
