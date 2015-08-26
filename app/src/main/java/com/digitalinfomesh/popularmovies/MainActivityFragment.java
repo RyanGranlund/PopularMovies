@@ -3,6 +3,7 @@ package com.digitalinfomesh.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Movie;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -316,7 +317,7 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-                    Movie movie = new Movie(posterPaths[position],titles[position],releases[position],ratings[position],plots[position]);
+                    MovieParcelable movie = new MovieParcelable(posterPaths[position],titles[position],releases[position],ratings[position],plots[position]);
                     //detailIntent.putExtra("moviePosition",position);
                     detailIntent.putExtra("movieDetails", movie);
                     startActivity(detailIntent);
