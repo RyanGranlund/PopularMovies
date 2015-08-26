@@ -1,6 +1,7 @@
 package com.digitalinfomesh.popularmovies;
 
 import android.content.Intent;
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -31,7 +32,7 @@ public class DetailActivityFragment extends Fragment {
 
         //get movie data from parcelable
         Intent detailIntent = getActivity().getIntent();
-        Movie movie = detailIntent.getParcelableExtra("movieDetails");
+        MovieParcelable movie = detailIntent.getParcelableExtra("movieDetails");
 
         //Set title TextView
         TextView title = (TextView) detailView.findViewById(R.id.title);

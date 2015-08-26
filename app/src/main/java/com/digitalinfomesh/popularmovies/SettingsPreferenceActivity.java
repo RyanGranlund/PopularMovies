@@ -6,7 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
-public class SettingsActivity extends PreferenceActivity
+public class SettingsPreferenceActivity extends PreferenceActivity
     implements Preference.OnPreferenceChangeListener {
 
     @Override
@@ -29,7 +29,6 @@ public class SettingsActivity extends PreferenceActivity
                         .getString(preference.getKey(), ""));
 
     }
-
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
