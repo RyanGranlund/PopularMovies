@@ -1,10 +1,8 @@
 package com.digitalinfomesh.popularmovies;
 
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +48,6 @@ public class DetailActivityFragment extends Fragment {
             plot.setText(movie.getPlot());
         }
 
-        plot.setMovementMethod(new ScrollingMovementMethod());
 
         //Set Rating TextView
         TextView rating = (TextView) detailView.findViewById(R.id.rating);
@@ -61,7 +58,15 @@ public class DetailActivityFragment extends Fragment {
         release.setText("Released: " + movie.getRelease());
 
 
+
+
+
+
+
         return detailView;
     }
+
+
 }
+
 

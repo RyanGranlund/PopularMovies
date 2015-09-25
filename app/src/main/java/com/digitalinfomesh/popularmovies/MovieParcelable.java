@@ -9,6 +9,7 @@ import android.os.Parcelable;
 
 public class MovieParcelable implements Parcelable {
 
+    private String mSID;
     private String mSPosterPath;
     private String mSTitle;
     private String mSRelease;
@@ -21,6 +22,7 @@ public class MovieParcelable implements Parcelable {
     }
 
     public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(mSID);
         parcel.writeString(mSPosterPath);
         parcel.writeString(mSTitle);
         parcel.writeString(mSRelease);
@@ -28,7 +30,8 @@ public class MovieParcelable implements Parcelable {
         parcel.writeString(mSPlot);
     }
 
-    public MovieParcelable(String sPosterPath, String sTitle, String sRelease, String sRating, String sPlot) {
+    public MovieParcelable(String sID, String sPosterPath, String sTitle, String sRelease, String sRating, String sPlot) {
+        this.mSID = sID;
         this.mSPosterPath = sPosterPath;
         this.mSTitle = sTitle;
         this.mSRelease = sRelease;
@@ -37,11 +40,21 @@ public class MovieParcelable implements Parcelable {
     }
 
     private MovieParcelable(Parcel in) {
+        this.mSID = in.readString();
         this.mSPosterPath = in.readString();
         this.mSTitle = in.readString();
         this.mSRelease = in.readString();
         this.mSRating = in.readString();
         this.mSPlot = in.readString();
+    }
+
+    //ID methods
+    public String getID() {
+        return mSID;
+    }
+
+    public void setID(String movID) {
+        this.mSID = movID;
     }
 
     //poster path methods

@@ -3,7 +3,8 @@ package com.digitalinfomesh.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Movie;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class MainActivityFragment extends Fragment {
 
 
     //Variables that store movie data
+    private String[] movieID = new String[20];
     private String[] posterPaths = new String[20];
     private String[] titles = new String[20];
     private String[] plots = new String[20];
@@ -55,6 +57,8 @@ public class MainActivityFragment extends Fragment {
         if (savedInstanceState == null) {
             updateMovies();
         }
+
+        DatabaseHelper DBHelper = new DatabaseHelper(getActivity());
 
     }
 
@@ -219,6 +223,7 @@ public class MainActivityFragment extends Fragment {
 
 
             final String RESULT_LIST = "results";
+            final String MOVIE_ID = "id";
             final String MOVIE_POSTER = "poster_path";
             final String MOVIE_TITLE = "original_title";
             final String MOVIE_PLOT = "overview";
@@ -231,6 +236,7 @@ public class MainActivityFragment extends Fragment {
 
             String[] resultStrs = new String[20];
 
+            String mID;
             String path;
             String title;
             String plot;
@@ -243,13 +249,14 @@ public class MainActivityFragment extends Fragment {
 
                 JSONObject jsonObject = resultArray.getJSONObject(i);
 
+                mID = jsonObject.getString(MOVIE_ID);
                 path = jsonObject.getString(MOVIE_POSTER);
                 title = jsonObject.getString(MOVIE_TITLE);
                 plot = jsonObject.getString(MOVIE_PLOT);
                 rating = jsonObject.getString(MOVIE_RATING);
                 release = jsonObject.getString(MOVIE_RELEASE);
 
-                //set public static variables with movie data
+                movieID[i] = mID;
                 posterPaths[i] = path;
                 titles[i] = title;
                 plots[i] = plot;
@@ -317,7 +324,7 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-                    MovieParcelable movie = new MovieParcelable(posterPaths[position],titles[position],releases[position],ratings[position],plots[position]);
+                    MovieParcelable movie = new MovieParcelable(movieID[position], posterPaths[position],titles[position],releases[position],ratings[position],plots[position]);
                     //detailIntent.putExtra("moviePosition",position);
                     detailIntent.putExtra("movieDetails", movie);
                     startActivity(detailIntent);
@@ -327,6 +334,38 @@ public class MainActivityFragment extends Fragment {
             return imageView;
         }
 
+    }
+
+    public class DatabaseHelper extends SQLiteOpenHelper {
+
+        static final String dbName="MovieDB";
+        static final String favoritesTable="MovieFavorite";
+        static final String colID="ID";
+        static final String colPosterPath = "PosterPath";
+        static final String colTitle="Title";
+        static final String colPlot="Plot";
+        static final String colRating="Rating";
+        static final String colRelease="Release";
+
+
+        public DatabaseHelper(Context context) {
+            super(context, dbName, null,33);
+        }
+
+        public void onCreate(SQLiteDatabase db) {
+            // TODO Auto-generated method stub
+
+            db.execSQL("CREATE TABLE " + favoritesTable + " (" + colID + " INTEGER PRIMARY KEY , " + colPosterPath + " TEXT , " + colTitle + " TEXT , " + colPlot + " TEXT , " + colRating + " TEXT , " + colRelease + " TEXT)");
+
+        }
+
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            // TODO Auto-generated method stub
+
+            db.execSQL("DROP TABLE IF EXISTS "+favoritesTable);
+
+            onCreate(db);
+        }
     }
 
 }
