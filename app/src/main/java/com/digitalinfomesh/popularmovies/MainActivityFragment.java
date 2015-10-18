@@ -1,5 +1,6 @@
 package com.digitalinfomesh.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -341,6 +342,7 @@ public class MainActivityFragment extends Fragment {
         static final String dbName="MovieDB";
         static final String favoritesTable="MovieFavorite";
         static final String colID="ID";
+        static final String colMovieID="MovieID";
         static final String colPosterPath = "PosterPath";
         static final String colTitle="Title";
         static final String colPlot="Plot";
@@ -355,7 +357,7 @@ public class MainActivityFragment extends Fragment {
         public void onCreate(SQLiteDatabase db) {
             // TODO Auto-generated method stub
 
-            db.execSQL("CREATE TABLE " + favoritesTable + " (" + colID + " INTEGER PRIMARY KEY , " + colPosterPath + " TEXT , " + colTitle + " TEXT , " + colPlot + " TEXT , " + colRating + " TEXT , " + colRelease + " TEXT)");
+            db.execSQL("CREATE TABLE " + favoritesTable + " (" + colID + " INTEGER PRIMARY KEY AUTOINCREMENT , " + colMovieID + " Text , " + colPosterPath + " TEXT , " + colTitle + " TEXT , " + colPlot + " TEXT , " + colRating + " TEXT , " + colRelease + " TEXT)");
 
         }
 
@@ -365,6 +367,21 @@ public class MainActivityFragment extends Fragment {
             db.execSQL("DROP TABLE IF EXISTS "+favoritesTable);
 
             onCreate(db);
+        }
+
+        public void addFavorite(String movieID, String path, String title, String plot, String rating, String release) {
+
+            SQLiteDatabase db=this.getWritableDatabase();
+            ContentValues cv=new ContentValues();
+            cv.put(colMovieID, movieID);
+            cv.put(colPosterPath, path);
+            cv.put(colTitle, title);
+            cv.put(colPlot, plot);
+            cv.put(colRating, rating);
+            cv.put(colRelease, release);
+            db.insert(favoritesTable, colID, cv);
+            db.close();
+
         }
     }
 
