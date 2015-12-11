@@ -1,11 +1,8 @@
 package com.digitalinfomesh.popularmovies;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -59,12 +56,11 @@ public class MainActivityFragment extends Fragment {
             updateMovies();
         }
 
-        DatabaseHelper DBHelper = new DatabaseHelper(getActivity());
 
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
+    public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -75,24 +71,22 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String searchType = prefs.getString("search","popular");
+        String searchType = prefs.getString("search", "popular");
 
         //if current movie search type does not match shared pref search type update movies
         if (currentSortState.equals(searchType)) {
 
-        }else{
+        } else {
             updateMovies();
         }
 
 
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,7 +101,6 @@ public class MainActivityFragment extends Fragment {
         super.onStart();
 
     }
-
 
     public void updateMovies() {
         FetchMoviesTask moviesTask = new FetchMoviesTask();
@@ -129,9 +122,8 @@ public class MainActivityFragment extends Fragment {
 
             //Gets movie search type from shared preferences
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String searchType = prefs.getString("search","popular");
+            String searchType = prefs.getString("search", "popular");
             currentSortState = searchType;
-
 
 
             try {
@@ -149,18 +141,16 @@ public class MainActivityFragment extends Fragment {
                     SORT_BY = "vote_average.desc";
 
                 } else {
-                    SORT_BY ="popularity.desc";
+                    SORT_BY = "popularity.desc";
 
                 }
-
-
 
 
                 //build URL
                 Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                         .appendPath(TYPE_PATH)
                         .appendPath(VIDEO_TYPE)
-                        .appendQueryParameter("certification_country",COUNTRY)
+                        .appendQueryParameter("certification_country", COUNTRY)
                         .appendQueryParameter("sort_by", SORT_BY)
                         .appendQueryParameter("api_key", API_Key)
                         .build();
@@ -271,7 +261,7 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String[] result){
+        protected void onPostExecute(String[] result) {
             //Set gridview adapter
             GridView gridview = (GridView) getActivity().findViewById(R.id.gridView);
             gridview.setAdapter(new ImageAdapter(getActivity()));
@@ -279,7 +269,6 @@ public class MainActivityFragment extends Fragment {
         }
 
     }
-
 
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
@@ -315,9 +304,8 @@ public class MainActivityFragment extends Fragment {
                 imageView = (ImageView) convertView;
             }
 
-                //set image to image view
-                Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
-
+            //set image to image view
+            Picasso.with(mContext).load("http://image.tmdb.org/t/p/w500/" + posterPaths[position]).into(imageView);
 
 
             //when clicking open details view
@@ -325,7 +313,7 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-                    MovieParcelable movie = new MovieParcelable(movieID[position], posterPaths[position],titles[position],releases[position],ratings[position],plots[position]);
+                    MovieParcelable movie = new MovieParcelable(movieID[position], posterPaths[position], titles[position], releases[position], ratings[position], plots[position]);
                     //detailIntent.putExtra("moviePosition",position);
                     detailIntent.putExtra("movieDetails", movie);
                     startActivity(detailIntent);
@@ -336,56 +324,8 @@ public class MainActivityFragment extends Fragment {
         }
 
     }
-
-    public class DatabaseHelper extends SQLiteOpenHelper {
-
-        static final String dbName="MovieDB";
-        static final String favoritesTable="MovieFavorite";
-        static final String colID="ID";
-        static final String colMovieID="MovieID";
-        static final String colPosterPath = "PosterPath";
-        static final String colTitle="Title";
-        static final String colPlot="Plot";
-        static final String colRating="Rating";
-        static final String colRelease="Release";
-
-
-        public DatabaseHelper(Context context) {
-            super(context, dbName, null,33);
-        }
-
-        public void onCreate(SQLiteDatabase db) {
-            // TODO Auto-generated method stub
-
-            db.execSQL("CREATE TABLE " + favoritesTable + " (" + colID + " INTEGER PRIMARY KEY AUTOINCREMENT , " + colMovieID + " Text , " + colPosterPath + " TEXT , " + colTitle + " TEXT , " + colPlot + " TEXT , " + colRating + " TEXT , " + colRelease + " TEXT)");
-
-        }
-
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            // TODO Auto-generated method stub
-
-            db.execSQL("DROP TABLE IF EXISTS "+favoritesTable);
-
-            onCreate(db);
-        }
-
-        public void addFavorite(String movieID, String path, String title, String plot, String rating, String release) {
-
-            SQLiteDatabase db=this.getWritableDatabase();
-            ContentValues cv=new ContentValues();
-            cv.put(colMovieID, movieID);
-            cv.put(colPosterPath, path);
-            cv.put(colTitle, title);
-            cv.put(colPlot, plot);
-            cv.put(colRating, rating);
-            cv.put(colRelease, release);
-            db.insert(favoritesTable, colID, cv);
-            db.close();
-
-        }
-    }
-
 }
+
 
 
 
